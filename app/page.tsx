@@ -1,228 +1,177 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 
 export default function Dashboard() {
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+
+  interface MenuItem {
+    label: string;
+    icon?: string;
+    type?: "error";
+  }
+
+  interface MenuSection {
+    label: string;
+    items: MenuItem[];
+  }
+
+  const menuItems: MenuSection[] = [
+    {
+      label: "File",
+      items: [
+        { label: "Buat Data Baru", icon: "add_circle" },
+        { label: "Setup Admin", icon: "admin_panel_settings" },
+        { label: "Log Off", icon: "logout", type: "error" },
+      ],
+    },
+    {
+      label: "Setup",
+      items: [
+        { label: "Data Perusahaan", icon: "domain" },
+        { label: "Chart of Account", icon: "account_tree" },
+        { label: "Saldo Awal Account", icon: "account_balance_wallet" },
+        { label: "Relasi Acc. - Inventory", icon: "inventory_2" },
+        { label: "Buku KAS/BANK", icon: "savings" },
+        { label: "Objek Pajak", icon: "receipt_long" },
+        { label: "Proyek", icon: "assignment" },
+      ],
+    },
+    {
+      label: "Accounting",
+      items: [
+        { label: "Input: General Journal", icon: "edit_document" },
+        { label: "Input: Voucher KAS/BANK", icon: "confirmation_number" },
+        { label: "divider" },
+        { label: "Output: Neraca", icon: "account_balance" },
+        { label: "Output: Laba/Rugi", icon: "trending_up" },
+        { label: "Output: Trial Balance", icon: "rule" },
+        { label: "Output: General Ledger", icon: "book" },
+        { label: "Output: Journal Transaksi", icon: "history" },
+        { label: "Output: Buku KAS/BANK", icon: "request_quote" },
+        { label: "Output: Kartu Hutang/Piutang", icon: "credit_card" },
+      ],
+    },
+    {
+      label: "Tools",
+      items: [
+        { label: "Buat Buku Tahun Baru", icon: "library_add" },
+        { label: "Hapus Transaksi", icon: "delete_sweep" },
+      ],
+    },
+    {
+      label: "Help",
+      items: [{ label: "Contact Admin", icon: "support_agent" }],
+    },
+  ];
+
   return (
     <>
-      {/* SideNavBar */}
-      <aside className="fixed left-0 top-0 h-screen w-64 bg-slate-50 dark:bg-slate-950 border-r border-slate-200 dark:border-slate-800 flex flex-col p-4 gap-2 z-50">
-        <div className="mb-8 px-4 py-2">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 signature-gradient rounded-xl flex items-center justify-center text-white">
-              <span
-                className="material-symbols-outlined"
-                style={{ fontVariationSettings: "'FILL' 1" }}
-              >
-                account_balance
-              </span>
-            </div>
-            <div>
-              <div className="text-lg font-extrabold text-slate-900 dark:text-white leading-tight">
-                Q-GL<br />Accounting
+      {/* Horizontal Top Navigation Bar */}
+      <header className="w-full bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 sticky top-0 z-50 shadow-sm">
+        {/* Top Section: Brand & User Actions */}
+        <div className="h-16 flex justify-between items-center px-8 border-b border-slate-50/50 dark:border-slate-800/50">
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 signature-gradient rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-500/20">
+                <span
+                  className="material-symbols-outlined text-xl"
+                  style={{ fontVariationSettings: "'FILL' 1" }}
+                >
+                  account_balance
+                </span>
               </div>
-              <div className="text-xs font-medium text-slate-500">
-                Enterprise Edition
+              <div className="text-lg font-extrabold text-slate-900 dark:text-white leading-tight font-manrope">
+                Q-GL Accounting
               </div>
-            </div>
-          </div>
-        </div>
-        <nav className="flex-grow space-y-6 overflow-y-auto pr-2 pb-4 scrollbar-thin">
-          {/* File */}
-          <div>
-            <div className="px-4 pb-2">
-              <p className="text-xs font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider font-manrope">File</p>
-            </div>
-            <div className="space-y-1">
-              <a className="flex items-center gap-3 px-4 py-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-200 ease-in-out" href="#">
-                <span className="material-symbols-outlined text-[20px]">add_circle</span>
-                <span className="font-manrope text-sm font-semibold">Buat Data Baru</span>
-              </a>
-              <a className="flex items-center gap-3 px-4 py-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-200 ease-in-out" href="#">
-                <span className="material-symbols-outlined text-[20px]">admin_panel_settings</span>
-                <span className="font-manrope text-sm font-semibold">Setup Admin</span>
-              </a>
-              <a className="flex items-center gap-3 px-4 py-2 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-all duration-200 ease-in-out" href="#">
-                <span className="material-symbols-outlined text-[20px]">logout</span>
-                <span className="font-manrope text-sm font-semibold">Log Off</span>
-              </a>
-            </div>
-          </div>
-
-          {/* Setup */}
-          <div>
-            <div className="px-4 pb-2">
-              <p className="text-xs font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider font-manrope">Setup</p>
-            </div>
-            <div className="space-y-1">
-              <a className="flex items-center gap-3 px-4 py-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-200 ease-in-out" href="#">
-                <span className="material-symbols-outlined text-[20px]">domain</span>
-                <span className="font-manrope text-sm font-semibold">Data Perusahaan</span>
-              </a>
-              <a className="flex items-center gap-3 px-4 py-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-200 ease-in-out" href="#">
-                <span className="material-symbols-outlined text-[20px]">account_tree</span>
-                <span className="font-manrope text-sm font-semibold">Chart of Account</span>
-              </a>
-              <a className="flex items-center gap-3 px-4 py-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-200 ease-in-out" href="#">
-                <span className="material-symbols-outlined text-[20px]">account_balance_wallet</span>
-                <span className="font-manrope text-sm font-semibold">Saldo Awal Account</span>
-              </a>
-              <a className="flex items-center gap-3 px-4 py-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-200 ease-in-out" href="#">
-                <span className="material-symbols-outlined text-[20px]">inventory_2</span>
-                <span className="font-manrope text-sm font-semibold">Relasi Acc. - Inventory</span>
-              </a>
-              <a className="flex items-center gap-3 px-4 py-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-200 ease-in-out" href="#">
-                <span className="material-symbols-outlined text-[20px]">savings</span>
-                <span className="font-manrope text-sm font-semibold">Buku KAS/BANK</span>
-              </a>
-              <a className="flex items-center gap-3 px-4 py-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-200 ease-in-out" href="#">
-                <span className="material-symbols-outlined text-[20px]">receipt_long</span>
-                <span className="font-manrope text-sm font-semibold">Objek Pajak</span>
-              </a>
-              <a className="flex items-center gap-3 px-4 py-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-200 ease-in-out" href="#">
-                <span className="material-symbols-outlined text-[20px]">assignment</span>
-                <span className="font-manrope text-sm font-semibold">Proyek</span>
-              </a>
-            </div>
-          </div>
-
-          {/* Accounting */}
-          <div>
-            <div className="px-4 pb-2">
-              <p className="text-xs font-extrabold text-blue-600 dark:text-blue-400 uppercase tracking-wider font-manrope">Accounting</p>
             </div>
             
-            <div className="px-4 pt-1 pb-1">
-              <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Input</p>
-            </div>
-            <div className="space-y-1">
-              <a className="flex items-center gap-3 px-4 py-2 text-blue-600 dark:text-blue-400 bg-white dark:bg-slate-900 rounded-lg shadow-sm font-bold transition-all duration-200 ease-in-out" href="#">
-                <span className="material-symbols-outlined text-[20px]">edit_document</span>
-                <span className="font-manrope text-sm font-semibold">General Journal</span>
-              </a>
-              <a className="flex items-center gap-3 px-4 py-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-200 ease-in-out" href="#">
-                <span className="material-symbols-outlined text-[20px]">confirmation_number</span>
-                <span className="font-manrope text-sm font-semibold">Voucher KAS/BANK</span>
-              </a>
-            </div>
+            {/* Nav Links integrated into Top Bar */}
+            <nav className="flex items-center ml-4">
+              {menuItems.map((menu) => (
+                <div
+                  key={menu.label}
+                  className="relative group px-1"
+                  onMouseEnter={() => setActiveDropdown(menu.label)}
+                  onMouseLeave={() => setActiveDropdown(null)}
+                >
+                  <button className="flex items-center gap-1.5 px-4 py-2 text-sm font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-blue-600 dark:hover:text-blue-400 rounded-lg transition-all">
+                    <span>{menu.label}</span>
+                    <span className="material-symbols-outlined text-xs">expand_more</span>
+                  </button>
 
-            <div className="px-4 pt-3 pb-1">
-              <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Output</p>
-            </div>
-            <div className="space-y-1">
-              <a className="flex items-center gap-3 px-4 py-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-200 ease-in-out" href="#">
-                <span className="material-symbols-outlined text-[20px]">account_balance</span>
-                <span className="font-manrope text-sm font-semibold">Neraca</span>
-              </a>
-              <a className="flex items-center gap-3 px-4 py-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-200 ease-in-out" href="#">
-                <span className="material-symbols-outlined text-[20px]">trending_up</span>
-                <span className="font-manrope text-sm font-semibold">Laba/Rugi</span>
-              </a>
-              <a className="flex items-center gap-3 px-4 py-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-200 ease-in-out" href="#">
-                <span className="material-symbols-outlined text-[20px]">rule</span>
-                <span className="font-manrope text-sm font-semibold">Trial Balance</span>
-              </a>
-              <a className="flex items-center gap-3 px-4 py-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-200 ease-in-out" href="#">
-                <span className="material-symbols-outlined text-[20px]">book</span>
-                <span className="font-manrope text-sm font-semibold">General Ledger</span>
-              </a>
-              <a className="flex items-center gap-3 px-4 py-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-200 ease-in-out" href="#">
-                <span className="material-symbols-outlined text-[20px]">history</span>
-                <span className="font-manrope text-sm font-semibold">Journal Transaksi</span>
-              </a>
-              <a className="flex items-center gap-3 px-4 py-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-200 ease-in-out" href="#">
-                <span className="material-symbols-outlined text-[20px]">request_quote</span>
-                <span className="font-manrope text-sm font-semibold">Buku KAS/BANK</span>
-              </a>
-              <a className="flex items-center gap-3 px-4 py-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-200 ease-in-out" href="#">
-                <span className="material-symbols-outlined text-[20px]">credit_card</span>
-                <span className="font-manrope text-sm font-semibold">Kartu Hutang/Piutang</span>
-              </a>
-            </div>
+                  {/* Dropdown Menu */}
+                  <div className="absolute left-0 mt-0 pt-2 w-64 invisible group-hover:visible opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-200">
+                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl shadow-2xl overflow-hidden py-2 backdrop-blur-xl ring-1 ring-black/5">
+                      {menu.items.map((item, idx) => (
+                        item.label === "divider" ? (
+                          <div key={idx} className="h-px bg-slate-100 dark:bg-slate-800 my-1 mx-2"></div>
+                        ) : (
+                          <a
+                            key={item.label}
+                            href="#"
+                            className={`flex items-center gap-3 px-4 py-2.5 text-sm font-semibold transition-colors duration-200 ${
+                              item.type === "error"
+                                ? "text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
+                                : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-blue-600 dark:hover:text-blue-400"
+                            }`}
+                          >
+                            <span className="material-symbols-outlined text-xl">{item.icon}</span>
+                            <span>{item.label}</span>
+                          </a>
+                        )
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </nav>
           </div>
 
-          {/* Tools */}
-          <div>
-            <div className="px-4 pb-2">
-              <p className="text-xs font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider font-manrope">Tools</p>
-            </div>
-            <div className="space-y-1">
-              <a className="flex items-center gap-3 px-4 py-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-200 ease-in-out" href="#">
-                <span className="material-symbols-outlined text-[20px]">library_add</span>
-                <span className="font-manrope text-sm font-semibold">Buat Buku Tahun Baru</span>
-              </a>
-              <a className="flex items-center gap-3 px-4 py-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-200 ease-in-out" href="#">
-                <span className="material-symbols-outlined text-[20px]">delete_sweep</span>
-                <span className="font-manrope text-sm font-semibold">Hapus Transaksi</span>
-              </a>
-            </div>
-          </div>
-
-          {/* Help */}
-          <div>
-            <div className="px-4 pb-2">
-              <p className="text-xs font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider font-manrope">Help</p>
-            </div>
-            <div className="space-y-1">
-              <a className="flex items-center gap-3 px-4 py-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-200 ease-in-out" href="#">
-                <span className="material-symbols-outlined text-[20px]">support_agent</span>
-                <span className="font-manrope text-sm font-semibold">Contact Admin</span>
-              </a>
-            </div>
-          </div>
-        </nav>
-        <button className="mt-auto mx-2 signature-gradient text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 active:scale-95 duration-150">
-          <span className="material-symbols-outlined">add</span>
-          New Entry
-        </button>
-      </aside>
-
-      {/* Main Content Area */}
-      <main className="pl-64 min-h-screen">
-        {/* TopNavBar */}
-        <header className="w-full h-16 bg-white dark:bg-slate-900 flex justify-between items-center px-8 border-b border-slate-100 dark:border-slate-800 sticky top-0 z-40">
-          <div className="flex items-center gap-8">
-            <span className="text-xl font-black text-blue-700 dark:text-blue-400 font-manrope tracking-tight">
-              Q-GL Accounting
-            </span>
-            <div className="relative flex items-center">
+          <div className="flex items-center gap-4">
+            <div className="relative flex items-center mr-2">
               <span className="material-symbols-outlined absolute left-3 text-slate-400 text-sm">
                 search
               </span>
               <input
-                className="bg-slate-100 dark:bg-slate-800 border-none rounded-full pl-10 pr-4 py-1.5 text-sm w-64 focus:ring-2 focus:ring-blue-500/20 transition-all outline-none"
-                placeholder="Search ledger entries..."
+                className="bg-slate-100 dark:bg-slate-800 border-none rounded-full pl-10 pr-4 py-1.5 text-sm w-48 focus:w-64 focus:ring-2 focus:ring-blue-500/20 transition-all outline-none"
+                placeholder="Search..."
                 type="text"
               />
             </div>
-          </div>
-          <div className="flex items-center gap-4">
+            
             <div className="flex items-center gap-2">
               <button className="p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-500 active:scale-95 duration-150 transition-colors">
                 <span className="material-symbols-outlined">notifications</span>
               </button>
-              <button className="p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-500 active:scale-95 duration-150 transition-colors">
-                <span className="material-symbols-outlined">help</span>
-              </button>
             </div>
-            <div className="h-8 w-[1px] bg-slate-100 dark:bg-slate-800 mx-1"></div>
-            <button className="px-4 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-sm font-bold hover:bg-blue-100 transition-colors">
+            
+            <div className="h-6 w-[1px] bg-slate-200 dark:bg-slate-800 mx-1"></div>
+            
+            <button className="px-4 py-1.5 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-lg text-sm font-bold hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors">
               Quick Action
             </button>
+            
             <div className="flex items-center gap-3 ml-2">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 alt="User Profile"
-                className="w-8 h-8 rounded-full border-2 border-white shadow-sm object-cover"
+                className="w-8 h-8 rounded-full border-2 border-white dark:border-slate-800 shadow-sm object-cover"
                 src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=200&auto=format&fit=crop"
               />
             </div>
           </div>
-        </header>
+        </div>
+      </header>
 
+      {/* Main Content Area */}
+      <main className="min-h-screen">
         <div className="p-8 max-w-7xl mx-auto space-y-8">
           {/* Page Header */}
           <div className="flex justify-between items-end">
             <div>
-              <h1 className="text-3xl font-extrabold tracking-tight text-on-surface">
+              <h1 className="text-3xl font-extrabold tracking-tight text-on-surface font-manrope">
                 Financial Overview
               </h1>
               <p className="text-on-surface-variant font-medium mt-1">
@@ -263,8 +212,8 @@ export default function Dashboard() {
                 </span>
               </div>
               <div>
-                <p className="text-on-surface-variant font-semibold text-sm tracking-wide">
-                  TOTAL REVENUE
+                <p className="text-on-surface-variant font-semibold text-sm tracking-wide uppercase">
+                  Total Revenue
                 </p>
                 <h2 className="text-4xl font-extrabold font-headline mt-1 tracking-tight">
                   Rp. 428.940,-
@@ -288,8 +237,8 @@ export default function Dashboard() {
                 </span>
               </div>
               <div>
-                <p className="text-on-surface-variant font-semibold text-sm tracking-wide">
-                  OPERATING EXPENSES
+                <p className="text-on-surface-variant font-semibold text-sm tracking-wide uppercase">
+                  Operating Expenses
                 </p>
                 <h2 className="text-4xl font-extrabold font-headline mt-1 tracking-tight">
                   Rp. 184.200,-
@@ -313,8 +262,8 @@ export default function Dashboard() {
                 </span>
               </div>
               <div>
-                <p className="text-blue-100 font-semibold text-sm tracking-wide">
-                  NET INCOME
+                <p className="text-blue-100 font-semibold text-sm tracking-wide uppercase">
+                  Net Income
                 </p>
                 <h2 className="text-4xl font-extrabold font-headline mt-1 tracking-tight">
                   Rp. 244.739,-
